@@ -1,9 +1,12 @@
 import pygame
-# from screens.screen_manager import ScreenManager
-# from screens.title_screen import TitleScreen
-# from screens.tutorial_screen import TutorialScreen
-# from screens.settings_screen import SettingsScreen
+from screens.screen_manager import ScreenManager
+from screens.tittle_screen import TitleScreen
+from screens.tutorial_screen import TutorialScreen
+from screens.settings_screen import SettingsScreen
+# from screens.main_menu_screen import MainMenuScreen
+# from screens.game_play_screen import GamePlayScreen
 
+from core.progress_manager import ProgressManager
 
 if __name__ == "__main__":
     pygame.init()
@@ -24,24 +27,24 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
 
     # inits innit
-    # progress_manager = ProgressManager()
+    progress_manager = ProgressManager()
     # game_manager = GameManager(progress_manager) 
-    # screen_manager = ScreenManager()
+    screen_manager = ScreenManager()
 
     # Screens Shenanigans
-    # title_screen = TitleScreen()
-    # tutorial_screen = TutorialScreen()
+    title_screen = TitleScreen()
+    tutorial_screen = TutorialScreen()
     # settings_screen = SettingsScreen(game_manager_ref=game_manager_instance) # Pass GM if needed
-    # main_menu_screen = MainMenuScreen() # etc.
+    # main_menu_screen = MainMenuScreen() 
     # game_play_screen = GamePlayScreen()
 
-    # screen_manager.add_screen('title', title_screen)
-    # screen_manager.add_screen('tutorial', tutorial_screen)
+    screen_manager.add_screen('title', title_screen)
+    screen_manager.add_screen('tutorial', tutorial_screen)
     # screen_manager.add_screen('settings', settings_screen)
     # screen_manager.add_screen('main_menu', main_menu_screen)
     # screen_manager.add_screen('game_play', game_play_screen)
 
-    # screen_manager.go_to_screen('title')
+    screen_manager.go_to_screen('title')
 
     # Main loop
     running = True
@@ -51,10 +54,10 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            # screen_manager.handle_event(event) # ScreenManager handles event distribution
+            screen_manager.handle_event(event) # ScreenManager handles event distribution
 
-        # screen_manager.update(dt)
-        # screen_manager.render(screen_surface) # Render current screen        
+        screen_manager.update(dt)
+        screen_manager.render(screen) # Render current screen        
 
         pygame.display.flip()
 
