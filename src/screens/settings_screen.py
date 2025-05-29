@@ -1,7 +1,7 @@
 import pygame
-from .base_screen import BaseScreen
-from ..ui_elements.button import Button 
-from ..ui_elements.dialog import Dialog   
+from screens.base_screen import BaseScreen
+from ui_elements.button import Button 
+from ui_elements.dialog import Dialog   
 
 class SettingsScreen(BaseScreen):
     def __init__(self, game_manager_ref=None): 

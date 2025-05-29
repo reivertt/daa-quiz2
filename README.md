@@ -34,7 +34,7 @@ We use A* Algorithm to find the shortest path between delivery points. The map i
 ## 📚 How to Run
 ```bash
 pip install -r requirements.txt
-python runner.py
+python src/main.py
 ```
 ### Team Members  
 | Name | NRP | Roles |

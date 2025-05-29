@@ -1,6 +1,6 @@
 import pygame
-from .base_screen import BaseScreen
-from ..ui_elements.button import Button 
+from screens.base_screen import BaseScreen
+from ui_elements.button import Button 
 
 class MainMenuScreen(BaseScreen):
     def __init__(self, game_manager): 

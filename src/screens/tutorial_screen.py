@@ -1,6 +1,6 @@
 import pygame
-from .base_screen import BaseScreen
-from ..ui_elements.button import Button 
+from screens.base_screen import BaseScreen
+from ui_elements.button import Button 
 
 class TutorialScreen(BaseScreen):
     def __init__(self):
@@ -8,7 +8,7 @@ class TutorialScreen(BaseScreen):
         self.background_color = (60, 80, 60) 
 
         try:
-            self.tutorial_image = pygame.image.load("daa-quiz2/assets/images/placeholder.jpeg").convert_alpha()
+            self.tutorial_image = pygame.image.load("assets/images/placeholder.jpeg").convert_alpha()
             # img_width = self.tutorial_image.get_width()
             # img_height = self.tutorial_image.get_height()
             # scale_ratio = self.screen_width / img_width
@@ -36,7 +36,7 @@ class TutorialScreen(BaseScreen):
         # --- Back Button ---
         def back_action():
             if self.manager:
-                self.manager.go_to_screen('title_screen')
+                self.manager.go_to_screen('title')
 
         self.back_button = Button(
             x=self.screen_width // 2 - 100,
