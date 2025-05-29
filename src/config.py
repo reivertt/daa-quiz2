@@ -11,8 +11,11 @@ class Configurations:
         self.tile_size = 40
 
         self.START_TILE = 'S'
-        self.WALL_TILE = '#'
+        self.WALL_TILE = 'W'
         self.DESTINATION_TILE = 'D'
+        self.ROAD_TILE_1 = '1'
+        self.ROAD_TILE_2 = '2'
+        self.ROAD_TILE_3 = '3'
 
         self.DEFAULT_FUEL_CONSUMPTION_PER_MOVE = 1
         self.HINT_BATTERY_COST_PER_USE = 1

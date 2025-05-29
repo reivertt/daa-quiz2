@@ -8,11 +8,14 @@ from screens.game_play_screen import GamePlayScreen
 
 from core.progress_manager import ProgressManager
 from core.game_manager import GameManager
+from core.level_loader import LevelLoader
+from core.hint_provider import HintProvider
 
 pygame.init()
 
 try:
-    import config
+    from config import Configurations
+    config = Configurations()
     screen_width = config.SCREEN_WIDTH
     screen_height = config.SCREEN_HEIGHT
     fps = config.FPS
@@ -27,16 +30,19 @@ pygame.display.set_caption("apt-get packages")
 clock = pygame.time.Clock()
 
 # inits innit
+level_loader = LevelLoader()
 progress_manager = ProgressManager()
-game_manager = GameManager(progress_manager) 
+hint_provider = HintProvider()
+game_manager = GameManager(level_loader, progress_manager, hint_provider) 
 screen_manager = ScreenManager()
+
 
 # Screens Shenanigans
 title_screen = TitleScreen()
 tutorial_screen = TutorialScreen()
-settings_screen = SettingsScreen(game_manager_ref=game_manager)
-main_menu_screen = MainMenuScreen(game_manager=game_manager) 
-game_play_screen = GamePlayScreen()
+settings_screen = SettingsScreen(game_manager)
+main_menu_screen = MainMenuScreen(game_manager) 
+game_play_screen = GamePlayScreen(game_manager)
 
 screen_manager.add_screen('title', title_screen)
 screen_manager.add_screen('tutorial', tutorial_screen)

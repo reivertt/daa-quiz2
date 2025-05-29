@@ -45,14 +45,14 @@ class HintProvider:
         if not (0 <= start_coords[0] < cols and 0 <= start_coords[1] < rows):
             print(f"[HintProvider A*] Error: Start coordinates {start_coords} out of bounds.")
             return []
-        if map_data[start_coords[1]][start_coords[0]] == '#':
+        if map_data[start_coords[1]][start_coords[0]] == 'W':
             print(f"[HintProvider A*] Error: Start coordinates {start_coords} are on a wall.")
             return []
 
         if not (0 <= end_coords[0] < cols and 0 <= end_coords[1] < rows):
             print(f"[HintProvider A*] Error: End coordinates {end_coords} out of bounds.")
             return []
-        if map_data[end_coords[1]][end_coords[0]] == '#':
+        if map_data[end_coords[1]][end_coords[0]] == 'W':
             print(f"[HintProvider A*] Error: End coordinates {end_coords} are on a wall.")
             return []
             
@@ -95,7 +95,7 @@ class HintProvider:
                 if not (0 <= neighbor_pos[0] < cols and 0 <= neighbor_pos[1] < rows):
                     continue
 
-                if map_data[neighbor_pos[1]][neighbor_pos[0]] == '#':
+                if map_data[neighbor_pos[1]][neighbor_pos[0]] == 'W':
                     continue
 
                 if neighbor_pos in closed_set:
@@ -120,11 +120,11 @@ if __name__ == "__main__":
     hp = HintProvider()
 
     test_map = [
-        ["S", ".", ".", ".", "."],
-        [".", "#", "#", "#", "."],
-        [".", ".", ".", "E", "."],
-        ["#", "#", ".", "#", "#"],
-        [".", ".", ".", ".", "."]
+        ["S", "1", "1", "1", "1"],
+        ["1", "W", "W", "W", "1"],
+        ["1", "1", "1", "E", "1"],
+        ["W", "W", "1", "W", "W"],
+        ["1", "1", "1", "1", "1"]
     ]
     start = (0, 0) 
     end = (3, 2)   
@@ -137,8 +137,8 @@ if __name__ == "__main__":
     print(path if path else "No path found.")
     
     false_test_map = [
-        ["S", ".", "#", "E"],
-        [".", ".", "#", "."]
+        ["S", "1", "W", "E"],
+        ["1", "1", "W", "1"]
     ]
     false_start = (0,0)
     false_end = (3,0)

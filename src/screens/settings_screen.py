@@ -41,8 +41,8 @@ class SettingsScreen(BaseScreen):
             {"text": "No, Cancel", "value": "cancel_reset"}
         ]
         self.confirmation_dialog = Dialog(
-            x=self.screen_width // 2 - 200, y=self.screen_height // 2 - 100,
-            width=400, height=200,
+            x=self.screen_width // 2 - 300, y=self.screen_height // 2 - 100,
+            width=600, height=200,
             message="Really reset all progress?", 
             button_configs=dialog_button_configs
         )

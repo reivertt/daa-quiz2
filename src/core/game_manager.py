@@ -1,12 +1,13 @@
-from player import Player
-from level_loader import LevelData, LevelLoader
-from ..config import Configurations
-from progress_manager import ProgressManager
+from core.player import Player
+from core.progress_manager import ProgressManager
+from core.level_loader import LevelData, LevelLoader
+from core.hint_provider import HintProvider
+from config import Configurations
 
 config = Configurations()
 
 class GameManager:
-    def __init__(self, level_loader: LevelLoader, progress_manager: ProgressManager, hint_provider_instance=None):
+    def __init__(self, level_loader:LevelLoader, progress_manager:ProgressManager, hint_provider_instance:HintProvider):
         self.level_loader = level_loader
         self.progress_manager = progress_manager
         self.player: Player | None = None
@@ -38,6 +39,12 @@ class GameManager:
             self.is_level_loaded = False
             self.current_game_state = config.GAME_STATE_GAME_OVER
     
+    def get_max_level_unlocked(self) -> int:
+        return self.progress_manager.load_progress()
+
+    def get_total_defined_levels(self) -> int:
+        return self.level_loader.get_available_levels_count()
+
     def _initialize_level_state(self, level_data: LevelData):
         self.current_level_data = level_data
         
@@ -158,8 +165,8 @@ class GameManager:
         if action_type == 'move':
             if self.current_game_state == config.GAME_STATE_PLAYING:
                 direction_name = kwargs.get('direction') # 'up', 'down', 'left', 'right'
-                if direction_name in config.DIRECTION_MAP:
-                    self._handle_player_move_action(config.DIRECTION_MAP[direction_name])
+                if direction_name in config.DIRECTION_INPUT_MAP:
+                    self._handle_player_move_action(config.DIRECTION_INPUT_MAP[direction_name])
         
         elif action_type == 'request_hint':
             if self.current_game_state == config.GAME_STATE_PLAYING and self.can_use_hint():
@@ -182,7 +189,8 @@ class GameManager:
         if self.current_game_state != config.GAME_STATE_CONFIRM_HINT:
             return
 
-        if confirmed and self.can_use_hint():
+        print(f"GM: Confirming hint use: {confirmed}, can?: {self.can_use_hint()}")
+        if confirmed:
             self.current_battery -= config.HINT_BATTERY_COST_PER_USE
             self.active_hint_path = None
             if self.hint_provider and self.player and self.current_level_data:
@@ -193,17 +201,17 @@ class GameManager:
                     if (r,c) not in self.delivered_packages_coords:
                         pending_dest_cr.append((c,r)) 
 
-                self.active_hint_path = self.hint_provider.get_hint_path(
-                    grid=self.current_level_data.grid,
-                    start_node=player_pos_cr,
-                    undelivered_destinations=pending_dest_cr 
+                self.active_hint_path = self.hint_provider.get_path(
+                    map_data=self.current_level_data.grid,
+                    start_coords=player_pos_cr,
+                    end_coords=pending_dest_cr[0] 
                 )
             else:
                 print("GM: HintProvider not available or player/level data missing.")
             print(f"GM: Hint used. Battery left: {self.current_battery}. Path: {self.active_hint_path}")
         else:
             self.active_hint_path = None
-
+            print("GM: Hint use cancelled or not enough battery.")
         self.current_game_state = config.GAME_STATE_PLAYING
     
     def user_dialog_choice(self, choice: str):

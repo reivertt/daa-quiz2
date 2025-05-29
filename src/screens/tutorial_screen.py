@@ -8,7 +8,7 @@ class TutorialScreen(BaseScreen):
         self.background_color = (60, 80, 60) 
 
         try:
-            self.tutorial_image = pygame.image.load("assets/images/placeholder.jpeg").convert_alpha()
+            self.tutorial_image = pygame.image.load("assets/images/tutorial.png").convert_alpha()
             # img_width = self.tutorial_image.get_width()
             # img_height = self.tutorial_image.get_height()
             # scale_ratio = self.screen_width / img_width
@@ -40,7 +40,7 @@ class TutorialScreen(BaseScreen):
 
         self.back_button = Button(
             x=self.screen_width // 2 - 100,
-            y=self.screen_height - 70, 
+            y=self.screen_height - 120, 
             width=200,
             height=50,
             text="Back",

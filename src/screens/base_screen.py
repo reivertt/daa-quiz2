@@ -3,8 +3,8 @@ import pygame
 class BaseScreen:
     def __init__(self):
         self.manager = None 
-        self.screen_width = pygame.display.get_surface().get_width() if pygame.display.get_init() else 800
-        self.screen_height = pygame.display.get_surface().get_height() if pygame.display.get_init() else 600
+        self.screen_width = pygame.display.get_surface().get_width() if pygame.display.get_init() else 1280
+        self.screen_height = pygame.display.get_surface().get_height() if pygame.display.get_init() else 720
 
     def on_enter(self, **kwargs):
         # print(f"Entering {self.__class__.__name__} with args: {kwargs}")
