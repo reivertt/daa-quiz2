@@ -1,4 +1,4 @@
-# ✨apt-get packages✨
+# ✨apt-deliver packages✨
 
 A pathfinding-based puzzle game where the player controls a delivery robot to deliver packages efficiently across a map using the A* algorithm.
 
@@ -29,7 +29,7 @@ We use A* Algorithm to find the shortest path between delivery points. The map i
 - txt for map design
 
 ## 📊 Sample Output
-![screenshot](assets/images/placeholder.jpeg)
+[screenshots](https://drive.google.com/drive/folders/1DL5ur-BZKO_dQWJ1-mISFOIxRebqlWb5)
 
 ## 📚 How to Run
 ```bash
@@ -44,4 +44,4 @@ python src/main.py
 | Billy Jonathan | 5025221170 | Core / Gameplay Lead |
 
 🧾 Full Report
-You can find our full PDF report [here](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+You can find our full PDF report [here](https://docs.google.com/document/d/1INlLs4CUI4TBzhKMi-4HU_PfyAIFJwXU4b_qLlXrY1U/edit?tab=t.0)
