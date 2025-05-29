@@ -51,8 +51,6 @@ class LevelLoader:
             raise ValueError("No start position ('S') found in the map grid.")
         if num_packages == 0:
             print("Warning: No destination points ('D') found in the map grid.")
-
-
         return player_start_pos, destination_coords, num_packages, width, height
 
     def load_level_by_number(self, level_number: int) -> LevelData | None:
@@ -127,6 +125,8 @@ class LevelLoader:
         return count
 
 if __name__ == "__main__":
+
+    # Make Dummy Levels
     LEVELS_DIR = "./"
     os.makedirs(LEVELS_DIR, exist_ok=True)
 
@@ -135,10 +135,10 @@ if __name__ == "__main__":
         "initial_fuel": 50,
         "hint_battery": 2,
         "map_grid": [
-            "S010",
-            "0010",
-            "101D",
-            "000D"
+            "S1W1",
+            "11W1",
+            "212D",
+            "111D"
         ]
     }
     with open(os.path.join(LEVELS_DIR, "level_1.json"), 'w') as f:
@@ -150,7 +150,7 @@ if __name__ == "__main__":
         "hint_battery": 1,
         "map_grid": [
             "S00",
-            "01D",
+            "0WD",
             "000"
         ]
     }
@@ -164,14 +164,15 @@ if __name__ == "__main__":
         "hint_battery": 1,
         "map_grid": [
             "000",
-            "01D"
+            "01W"
         ]
     }
     with open(os.path.join(LEVELS_DIR, "level_3_bad_start.json"), 'w') as f:
         json.dump(sample_level_data_bad, f, indent=2)
 
+    # Test bad level (missing initial_fuel)
     sample_level_data_bad_field = {
-        # "level_name": "Bad Level - Missing Fuel", # Deliberately missing initial_fuel
+        "level_name": "Bad Level - Missing Fuel",
         "hint_battery": 1,
         "map_grid": [
             "S00",
@@ -182,6 +183,7 @@ if __name__ == "__main__":
         json.dump(sample_level_data_bad_field, f, indent=2)
 
 
+    # Initialize the LevelLoader with the directory containing the levels
     loader = LevelLoader(levels_directory=LEVELS_DIR)
 
     print(f"Found {loader.get_available_levels_count()} levels.")

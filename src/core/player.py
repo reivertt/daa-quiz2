@@ -1,5 +1,9 @@
+from ..config import Configurations
+
+config = Configurations()
+
 class Player:
-    WALL_CHAR = "1"
+    WALL_CHAR = config.WALL_TILE 
 
     def __init__(self, x, y):
         self.x = x
@@ -12,49 +16,55 @@ class Player:
 
     def get_location(self):
         return self.x, self.y
+    
+    def _is_tile_traversable(self, tile_char: str) -> bool:
+        if tile_char == self.WALL_CHAR:
+            return False
+        return tile_char in [config.START_TILE, config.DESTINATION_TILE] or tile_char.isdigit()
 
     def update_state(self, game_map):
         map_height = len(game_map)
         map_width = len(game_map[0])
 
         # UP
-        if self.y > 0 and game_map[self.y - 1][self.x] != self.WALL_CHAR:
+        if self.y > 0 and self._is_tile_traversable(game_map[self.y - 1][self.x]):
             self.move_up = True
         else:
             self.move_up = False
 
         # DOWN
-        if self.y < map_height - 1 and game_map[self.y + 1][self.x] != self.WALL_CHAR:
+        if self.y < map_height - 1 and self._is_tile_traversable(game_map[self.y + 1][self.x]):
             self.move_down = True
         else:
             self.move_down = False
 
         # LEFT
-        if self.x > 0 and game_map[self.y][self.x - 1] != self.WALL_CHAR:
+        if self.x > 0 and self._is_tile_traversable(game_map[self.y][self.x - 1]):
             self.move_left = True
         else:
             self.move_left = False
 
         # RIGHT
-        if self.x < map_width - 1 and game_map[self.y][self.x + 1] != self.WALL_CHAR:
+        if self.x < map_width - 1 and self._is_tile_traversable(game_map[self.y][self.x + 1]):
             self.move_right = True
         else:
             self.move_right = False
 
-    def move(self, direction_key):
+    def move(self, direction_key: str) -> bool: # direction_key is 'w', 'a', 's', 'd'
         key = direction_key.lower()
         moved = False
 
-        if self.move_up and key == "w": # Up
+        # Ensure update_state has been called before checking these flags
+        if self.move_up and key == config.PLAYER_ACTION_MOVE_UP:
             self.y -= 1
             moved = True
-        elif self.move_down and key == "s": # Down
+        elif self.move_down and key == config.PLAYER_ACTION_MOVE_DOWN:
             self.y += 1
             moved = True
-        elif self.move_left and key == "a": # Left
+        elif self.move_left and key == config.PLAYER_ACTION_MOVE_LEFT:
             self.x -= 1
             moved = True
-        elif self.move_right and key == "d": # Right
+        elif self.move_right and key == config.PLAYER_ACTION_MOVE_RIGHT:
             self.x += 1
             moved = True
         
