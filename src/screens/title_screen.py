@@ -6,7 +6,7 @@ class TitleScreen(BaseScreen):
     def __init__(self):
         super().__init__()
         self.title_font = pygame.font.Font(None, 74)
-        self.title_text = "apt-get packages" 
+        self.title_text = "apt-deliver packages" 
 
         # Button Callbacks
         def start_game_action():

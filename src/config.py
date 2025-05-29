@@ -4,11 +4,11 @@ class Configurations:
         self.start_level = 1
         self.max_level_unlocked = 1
         self.hint_provider = None
-        self.FPS = 24
-        self.SCREEN_WIDTH = 800
-        self.SCREEN_HEIGHT = 600
+        self.FPS = 60
+        self.SCREEN_WIDTH = 1280
+        self.SCREEN_HEIGHT = 720
 
-        self.tile_size = 32
+        self.tile_size = 40
 
         self.START_TILE = 'S'
         self.WALL_TILE = '#'

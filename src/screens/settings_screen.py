@@ -15,11 +15,12 @@ class SettingsScreen(BaseScreen):
         def reset_progress_action():
             self.confirmation_dialog.message = "Really reset all progress? This cannot be undone."
             self.confirmation_dialog.reset() 
+            self.game_manager.progress_manager.reset_progress(False)
             print("[SettingsScreen] Reset progress button clicked, showing dialog.")
 
         def back_action():
             if self.manager:
-                self.manager.go_to_screen('title_screen') 
+                self.manager.go_to_screen('title') 
 
         # --- Buttons ---
         button_width = 300

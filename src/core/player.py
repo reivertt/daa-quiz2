@@ -1,4 +1,4 @@
-from ..config import Configurations
+from config import Configurations
 
 config = Configurations()
 
