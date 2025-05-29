@@ -11,6 +11,23 @@ class SettingsScreen(BaseScreen):
         self.info_font = pygame.font.Font(None, 28)
         self.reset_feedback_message = ""
 
+        try:
+            self.settings_image = pygame.image.load("assets/images/backgrounds/settings.png").convert_alpha()
+            self.settings_image = pygame.transform.scale(self.settings_image, (self.screen_width, self.screen_height))
+
+            self.image_rect = self.settings_image.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+
+        except pygame.error as e:
+            print(f"Error loading settings image: {e}")
+            self.settings_image = pygame.Surface((self.screen_width - 100, self.screen_height - 200))
+            self.settings_image.fill((100, 100, 100))
+            error_font = pygame.font.Font(None, 36)
+            error_text = error_font.render("Settings Image Not Found!", True, (255, 0, 0))
+            error_rect = error_text.get_rect(center=(self.settings_image.get_width()//2, self.settings_image.get_height()//2))
+            self.settings_image.blit(error_text, error_rect)
+            self.image_rect = self.settings_image.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+
+
         # --- Callbacks ---
         def reset_progress_action():
             self.confirmation_dialog.message = "Really reset all progress? This cannot be undone."
@@ -75,9 +92,7 @@ class SettingsScreen(BaseScreen):
         surface.fill((70, 70, 100))  
 
         # Screen Title
-        title_surf = self.font.render("Settings", True, (255, 255, 255))
-        title_rect = title_surf.get_rect(center=(self.screen_width // 2, 100))
-        surface.blit(title_surf, title_rect)
+        surface.blit(self.settings_image, self.image_rect)
 
         # Render buttons
         for button in self.buttons:

@@ -24,6 +24,22 @@ class TitleScreen(BaseScreen):
         def exit_action():
             pygame.event.post(pygame.event.Event(pygame.QUIT))
 
+        try:
+            self.title_image = pygame.image.load("assets/images/backgrounds/title.png").convert_alpha()
+            self.title_image = pygame.transform.scale(self.title_image, (self.screen_width, self.screen_height))
+            self.image_rect = self.title_image.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+
+        except pygame.error as e:
+            print(f"Error loading title image: {e}")
+            self.title_image = pygame.Surface((self.screen_width - 100, self.screen_height - 200))
+            self.title_image.fill((100, 100, 100))
+            error_font = pygame.font.Font(None, 36)
+            error_text = error_font.render("Title Image Not Found!", True, (255, 0, 0))
+            error_rect = error_text.get_rect(center=(self.title_image.get_width()//2, self.title_image.get_height()//2))
+            self.title_image.blit(error_text, error_rect)
+            self.image_rect = self.title_image.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+
+
         button_width = 250
         button_height = 50
         spacing = 20
@@ -51,10 +67,7 @@ class TitleScreen(BaseScreen):
     def render(self, surface):
         surface.fill((50, 50, 80)) 
 
-        # Render title
-        title_surface = self.title_font.render(self.title_text, True, (255, 255, 255))
-        title_rect = title_surface.get_rect(center=(self.screen_width // 2, self.screen_height // 4))
-        surface.blit(title_surface, title_rect)
+        surface.blit(self.title_image, self.image_rect)
 
         # Render buttons
         for button in self.buttons:

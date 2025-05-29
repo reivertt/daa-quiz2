@@ -10,6 +10,22 @@ class MainMenuScreen(BaseScreen):
         self.title_font = pygame.font.Font(None, 60)
         self.level_buttons = []
         
+        try:
+            self.main_menu_image = pygame.image.load("assets/images/backgrounds/main_menu.png").convert_alpha()
+            self.main_menu_image = pygame.transform.scale(self.main_menu_image, (self.screen_width, self.screen_height))
+            self.image_rect = self.main_menu_image.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+
+        except pygame.error as e:
+            print(f"Error loading main menu image: {e}")
+            self.main_menu_image = pygame.Surface((self.screen_width - 100, self.screen_height - 200))
+            self.main_menu_image.fill((100, 100, 100))
+            error_font = pygame.font.Font(None, 36)
+            error_text = error_font.render("Main menu Image Not Found!", True, (255, 0, 0))
+            error_rect = error_text.get_rect(center=(self.main_menu_image.get_width()//2, self.main_menu_image.get_height()//2))
+            self.main_menu_image.blit(error_text, error_rect)
+            self.image_rect = self.main_menu_image.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+
+
         # Get total levels dynamically from GameManager
         self.total_levels = self.game_manager.get_total_defined_levels()
         if self.total_levels == 0: # Fallback if GM method not ready or no levels
@@ -29,7 +45,7 @@ class MainMenuScreen(BaseScreen):
                 self.manager.go_to_screen('title')
         
         self.back_button = Button(
-            x=50, y=self.screen_height - 70,
+            x=50, y=self.screen_height - 100,
             width=150, height=40, text="Back to Title",
             callback=back_to_title_action
         )
@@ -106,9 +122,7 @@ class MainMenuScreen(BaseScreen):
     def render(self, surface):
         surface.fill((70, 90, 110))  # A pleasant background color
 
-        title_surface = self.title_font.render("Select Level", True, (255, 255, 255))
-        title_rect = title_surface.get_rect(center=(self.screen_width // 2, 80))
-        surface.blit(title_surface, title_rect)
+        surface.blit(self.main_menu_image, self.image_rect)  # Draw background image
 
         for button in self.level_buttons:
             button.draw(surface)

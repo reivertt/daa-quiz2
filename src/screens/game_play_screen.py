@@ -25,6 +25,15 @@ class GamePlayScreen(BaseScreen):
         self.font_ui = pygame.font.Font(None, 32)
         self.current_level_id = None
 
+        map_pixel_width = 24 * TILE_SIZE
+        map_pixel_height = 16 * TILE_SIZE
+        self.map_offset_x = (self.screen_width - map_pixel_width) // 2
+        self.map_offset_y = (self.screen_height - map_pixel_height) // 2
+
+        self.tile_textures = {}
+        self.player_texture = None
+        self._load_textures()      
+
         # --- UI Buttons ---
         def hint_action():
             self.game_manager.handle_player_action(action_type='request_hint')
@@ -69,13 +78,35 @@ class GamePlayScreen(BaseScreen):
         
         self.active_dialog_key = None # Stores the key of the currently active dialog
 
-    def on_enter(self, **kwargs):
-        super().on_enter(**kwargs)
+    def _load_textures(self):
+            """Loads all necessary textures for the game."""
+            base_path_tiles = "assets/images/tiles/" # Adjust path as needed
+            base_path_player = "assets/images/player/" # Adjust path as needed
+            
+            try:
+                self.tile_textures[config.WALL_TILE] = pygame.image.load(f"{base_path_tiles}wall.png").convert_alpha()
+                
+                # For destinations, we need two states
+                self.tile_textures['DEST_UNVISITED'] = pygame.image.load(f"{base_path_tiles}unvisited.png").convert_alpha()
+                self.tile_textures['DEST_VISITED'] = pygame.image.load(f"{base_path_tiles}visited.png").convert_alpha()
+
+                # Player Texture
+                self.player_texture = pygame.image.load(f"{base_path_player}player.png").convert_alpha()
+
+                # Scale textures if TILE_SIZE is not their native size
+                for key, texture in self.tile_textures.items():
+                    self.tile_textures[key] = pygame.transform.scale(texture, (TILE_SIZE, TILE_SIZE))
+                if self.player_texture:
+                    self.player_texture = pygame.transform.scale(self.player_texture, (TILE_SIZE, TILE_SIZE))
+
+                print("[GamePlayScreen] Textures loaded successfully.")
+
+            except pygame.error as e:
+                print(f"Error loading textures: {e}")
+                print("Ensure all texture paths are correct and files exist in assets/images/...")
         
-        map_pixel_width = 24 * TILE_SIZE
-        map_pixel_height = 16 * TILE_SIZE
-        self.map_offset_x = (self.screen_width - map_pixel_width) // 2
-        self.map_offset_y = (self.screen_height - map_pixel_height) // 2            
+    def on_enter(self, **kwargs):
+        super().on_enter(**kwargs)       
 
         self.current_level_id = kwargs.get('level_id')
         if self.current_level_id is not None:
@@ -189,7 +220,6 @@ class GamePlayScreen(BaseScreen):
         destinations_data = self.game_manager.get_destinations_data() # list of {'pos': (col,row), 'visited': bool}
 
         if not map_data or player_pos_col_row is None:
-            # Optionally draw a "Loading..." or error message
             loading_font = pygame.font.Font(None, 50)
             text_surf = loading_font.render("Loading Level Data...", True, (200,200,200))
             text_rect = text_surf.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
@@ -203,25 +233,34 @@ class GamePlayScreen(BaseScreen):
                 screen_x = self.map_offset_x + (c_idx * TILE_SIZE)
                 screen_y = self.map_offset_y + (r_idx * TILE_SIZE)
                 rect = pygame.Rect(screen_x, screen_y, TILE_SIZE, TILE_SIZE)
-                color = ROAD_COLOR_1
-                # Use config constants for tile characters
-                if tile_char == config.ROAD_TILE_2: color = ROAD_COLOR_2
-                elif tile_char == config.ROAD_TILE_3: color = ROAD_COLOR_3
-                elif tile_char == config.WALL_TILE: color = WALL_COLOR
-                elif tile_char == config.START_TILE: color = START_COLOR
-                elif tile_char == config.DESTINATION_TILE:
-                    # Check if this destination (c_idx, r_idx) is in our map and its status
-                    is_visited = dest_status_map.get((c_idx, r_idx), False)
-                    color = DEST_VISITED_COLOR if is_visited else DEST_UNVISITED_COLOR
-                
-                pygame.draw.rect(surface, color, rect)
-                pygame.draw.rect(surface, (50,50,50), rect, 1) # Grid lines
 
-        # Draw Player (player_pos is col, row)
+                texture_to_draw = None
+
+                color = ROAD_COLOR_1
+                if tile_char == config.WALL_TILE: 
+                    texture_to_draw = self.tile_textures[config.WALL_TILE]
+                elif tile_char == config.DESTINATION_TILE:
+                    is_visited = dest_status_map.get((c_idx, r_idx), False)
+                    texture_to_draw = self.tile_textures.get('DEST_VISITED') if is_visited else self.tile_textures.get('DEST_UNVISITED')
+                elif tile_char == config.ROAD_TILE_2: 
+                    # texture_to_draw = self.tile_textures.get(config.ROAD_TILE_2)
+                    color = ROAD_COLOR_2
+                elif tile_char == config.ROAD_TILE_3:
+                    color = ROAD_COLOR_3 
+                    # texture_to_draw = self.tile_textures.get(config.ROAD_TILE_3)
+                elif tile_char == config.START_TILE: color = START_COLOR
+                
+                if texture_to_draw:
+                    surface.blit(texture_to_draw, (screen_x, screen_y))
+                else:
+                    pygame.draw.rect(surface, color, rect)
+                
+                pygame.draw.rect(surface, (122,122,122), rect, 1) # Grid lines
+
         player_screen_x = self.map_offset_x + (player_pos_col_row[0] * TILE_SIZE)
         player_screen_y = self.map_offset_y + (player_pos_col_row[1] * TILE_SIZE)
         player_rect = pygame.Rect(player_screen_x, player_screen_y, TILE_SIZE, TILE_SIZE)
-        pygame.draw.rect(surface, PLAYER_COLOR, player_rect)
+        surface.blit(self.player_texture, player_rect.topleft) 
 
     def _draw_hint_path(self, surface):
         hint_path = self.game_manager.get_active_hint_path() # Expects list of (col, row)

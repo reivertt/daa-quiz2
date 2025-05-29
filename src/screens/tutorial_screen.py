@@ -6,20 +6,9 @@ class TutorialScreen(BaseScreen):
     def __init__(self):
         super().__init__()
         self.background_color = (60, 80, 60) 
-
         try:
-            self.tutorial_image = pygame.image.load("assets/images/tutorial.png").convert_alpha()
-            # img_width = self.tutorial_image.get_width()
-            # img_height = self.tutorial_image.get_height()
-            # scale_ratio = self.screen_width / img_width
-            # new_height = int(img_height * scale_ratio)
-            # self.tutorial_image = pygame.transform.scale(self.tutorial_image, (self.screen_width, new_height))
-            # scale to screen height:
-            # scale_ratio = self.screen_height / img_height
-            # new_width = int(img_width * scale_ratio)
-            # self.tutorial_image = pygame.transform.scale(self.tutorial_image, (new_width, self.screen_height))
-
-            # todo: make the actual tutorial image and resize it
+            self.tutorial_image = pygame.image.load("assets/images/backgrounds/tutorial.png").convert_alpha()
+            self.tutorial_image = pygame.transform.scale(self.tutorial_image, (self.screen_width, self.screen_height))
             self.image_rect = self.tutorial_image.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
 
         except pygame.error as e:
